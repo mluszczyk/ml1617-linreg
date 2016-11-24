@@ -34,7 +34,7 @@ class MyLinearRegression(BaseEstimator):
         """
         X, y = check_X_y(X, y)
         batch_size = X.shape[0] if self.batch_size is None else self.batch_size
-        self.w = linreg(adjust(X), y, self.n_epochs, self.learning_rate, self.decay)
+        self.w = linreg(adjust(X), y, batch_size, self.n_epochs, self.learning_rate, self.decay)
         # Return the estimator
         return self
 
