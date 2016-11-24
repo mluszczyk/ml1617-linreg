@@ -28,33 +28,26 @@ def distance(vector):
     return numpy.inner(vector, vector)
 
 
-def descent(start, gradient, evaluate, eps, gamma, tries):
+def descent(start, gradient, n_epochs, learning_rate, decay):
     w = start
-    for num in range(tries):
+    for num in range(n_epochs):
         grad = gradient(w)
-        if distance(grad) < eps:
-            return w
-        else:
-            w += -gamma * grad
-        print("after num", num)
-        print("w", w)
-        print("grad", grad)
-        print("eval", evaluate(w))
-
-    raise RuntimeError("Not converged")
+        w += -learning_rate * grad
+        learning_rate *= decay
+    return w
 
 
 def adjust(x):
     return numpy.insert(x, 0, 1, axis=1)
 
 
-def linreg(x, y, eps, gamma, tries):
+def linreg(x, y, n_epochs, learning_rate, decay):
     start = numpy.zeros((x.shape[1],))
 
     def gradient(w):
         return calculate_grad(w, x, y)
 
-    return descent(start, gradient, lambda w: evaluate(w, x, y), eps, gamma, tries)
+    return descent(start, gradient, n_epochs, learning_rate, decay)
 
 
 def main():
@@ -83,7 +76,7 @@ def main():
 
     Xs = adjust(Xs_orig)
 
-    output = linreg(Xs, Ys, 0.0000001, 0.25, 70)
+    output = linreg(Xs, Ys, 70, 0.25)
     print([round(f, 2) for f in output])
 
 
