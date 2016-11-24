@@ -2,7 +2,7 @@ import numpy
 
 from mylinearregression import MyLinearRegression
 
-estimator = MyLinearRegression(n_epochs=1000, learning_rate=0.4, decay=0.99, batch_size=10)
+estimator = MyLinearRegression(n_epochs=1000, learning_rate=0.4, decay=0.99, batch_size=10, shuffle=True)
 
 xs = [0.528229010724395, 0.9027745539321911, 0.3118521458689988, 0.11704848570256954, 0.4766089600561566,
       0.8668141447194354, 0.769038647282098, 0.8098811544095684, 0.05375849568209068, 0.18397805336513817,

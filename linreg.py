@@ -1,4 +1,5 @@
 import numpy
+from sklearn.utils import shuffle
 
 
 def predict(w, x):
@@ -28,27 +29,24 @@ def distance(vector):
     return numpy.inner(vector, vector)
 
 
-def descent(start, get_batch_iterator, gradient, n_epochs, learning_rate, decay):
-    w = start
-    for num in range(n_epochs):
-        for x, y in get_batch_iterator():
-            grad = gradient(w, x, y)
-            w += -learning_rate * grad
-            learning_rate *= decay
-    return w
-
-
 def adjust(x):
     return numpy.insert(x, 0, 1, axis=1)
 
 
-def linreg(x, y, batch_size, n_epochs, learning_rate, decay):
+def linreg(x, y, batch_size, n_epochs, shuffle_: bool, learning_rate, decay):
     start = numpy.zeros((x.shape[1],))
 
-    def get_batch_iterator():
-        return (
+    w = start
+    for num in range(n_epochs):
+        if shuffle_:
+            x, y = shuffle(x, y)
+        batch_iterator = (
             (x[start:start + batch_size], y[start:start + batch_size])
             for start in range(0, x.shape[0], batch_size)
         )
 
-    return descent(start, get_batch_iterator, calculate_grad, n_epochs, learning_rate, decay)
+        for bx, by in batch_iterator:
+            grad = calculate_grad(w, bx, by)
+            w += -learning_rate * grad
+            learning_rate *= decay
+    return w
