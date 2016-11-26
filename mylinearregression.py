@@ -1,4 +1,5 @@
 from sklearn.base import BaseEstimator
+from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle
 from sklearn.utils.validation import check_X_y, check_array
 
@@ -13,15 +14,19 @@ class MyLinearRegression(BaseEstimator):
         A parameter used for demonstation of how to pass and store paramters.
     """
     def __init__(self, batch_size=None, n_epochs=100, shuffle: bool=False,
-                 holdout_size: float=0., learning_rate=1.0, decay=1.0):
+                 holdout_size: float=0., learning_rate=1.0, decay=1.0,
+                 standardize: bool=False):
         self.batch_size = batch_size
         self.n_epochs = n_epochs
         self.shuffle = shuffle
         self.holdout_size = holdout_size
         self.learning_rate = learning_rate
         self.decay = decay
+        self.standardize = standardize
+
         self.w = None
         self.validation = None
+        self.standard_scaler = None
 
     def holdout(self, X, y):
         holdout_num = int(round(self.holdout_size * X.shape[0]))
@@ -48,6 +53,9 @@ class MyLinearRegression(BaseEstimator):
         """
         X, y = check_X_y(X, y)
         X, y = self.holdout(X, y)
+        if self.standardize:
+            self.standard_scaler = StandardScaler()
+            X = self.standard_scaler.fit_transform(X)
         batch_size = X.shape[0] if self.batch_size is None else self.batch_size
         self.w = linreg(adjust(X), y, batch_size, self.n_epochs, self.shuffle, self.learning_rate, self.decay)
         # Return the estimator
@@ -65,6 +73,7 @@ class MyLinearRegression(BaseEstimator):
             Returns :math:`x^2` where :math:`x` is the first column of `X`.
         """
         X = check_array(X)
+        if self.standard_scaler is not None:
+            self.standard_scaler.transform(X)
 
         return predict(self.w, adjust(X))
-

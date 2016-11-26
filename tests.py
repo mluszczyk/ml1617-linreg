@@ -5,7 +5,7 @@ from mylinearregression import MyLinearRegression
 estimator = MyLinearRegression(
     n_epochs=1000, learning_rate=0.4,
     decay=0.99, batch_size=10, shuffle=True,
-    holdout_size=0.1
+    holdout_size=0.1, standardize=True
 )
 
 xs = [0.528229010724395, 0.9027745539321911, 0.3118521458689988, 0.11704848570256954, 0.4766089600561566,
