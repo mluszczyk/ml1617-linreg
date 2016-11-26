@@ -14,12 +14,13 @@ class MyLinearRegression(BaseEstimator):
         A parameter used for demonstation of how to pass and store paramters.
     """
     def __init__(self, batch_size=None, n_epochs=100, shuffle: bool=False,
-                 holdout_size: float=0., learning_rate=1.0, decay=1.0,
+                 holdout_size: float=0., l2=0., learning_rate=1.0, decay=1.0,
                  standardize: bool=False):
         self.batch_size = batch_size
         self.n_epochs = n_epochs
         self.shuffle = shuffle
         self.holdout_size = holdout_size
+        self.l2 = l2
         self.learning_rate = learning_rate
         self.decay = decay
         self.standardize = standardize
@@ -57,7 +58,8 @@ class MyLinearRegression(BaseEstimator):
             self.standard_scaler = StandardScaler()
             X = self.standard_scaler.fit_transform(X)
         batch_size = X.shape[0] if self.batch_size is None else self.batch_size
-        self.w = linreg(adjust(X), y, batch_size, self.n_epochs, self.shuffle, self.learning_rate, self.decay)
+        self.w = linreg(adjust(X), y, batch_size, self.n_epochs, self.shuffle,
+                        self.l2, self.learning_rate, self.decay)
         # Return the estimator
         return self
 

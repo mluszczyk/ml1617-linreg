@@ -15,14 +15,17 @@ def l2_loss(ys, ps):
     return sum((y - p) ** 2 for y, p in zip(ys, ps)) / len(ys)
 
 
-def partial_derivative(y, w, x, i):
+def partial_derivative(l2, y, w, x, i):
     n = len(y)
-    return -2. / n * sum((y[k] - numpy.inner(w, x[k])) * x[k][i] for k, _ in enumerate(y))
+    return (
+        -2. / n * sum((y[k] - numpy.inner(w, x[k])) * x[k][i] for k, _ in enumerate(y)) +
+        l2 * numpy.sum(w)
+    )
 
 
-def calculate_grad(w, x, y):
+def calculate_grad(l2, w, x, y):
     dim = len(w)
-    return numpy.asarray(tuple(partial_derivative(y, w, x, i) for i in range(dim)))
+    return numpy.asarray(tuple(partial_derivative(l2, y, w, x, i) for i in range(dim)))
 
 
 def distance(vector):
@@ -33,7 +36,7 @@ def adjust(x):
     return numpy.insert(x, 0, 1, axis=1)
 
 
-def linreg(x, y, batch_size, n_epochs, shuffle_: bool, learning_rate, decay):
+def linreg(x, y, batch_size, n_epochs, shuffle_: bool, l2, learning_rate, decay):
     start = numpy.zeros((x.shape[1],))
 
     w = start
@@ -46,7 +49,7 @@ def linreg(x, y, batch_size, n_epochs, shuffle_: bool, learning_rate, decay):
         )
 
         for bx, by in batch_iterator:
-            grad = calculate_grad(w, bx, by)
+            grad = calculate_grad(l2, w, bx, by)
             w += -learning_rate * grad
             learning_rate *= decay
     return w
