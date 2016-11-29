@@ -80,6 +80,6 @@ class MyLinearRegression(BaseEstimator):
         """
         X = check_array(X)
         if self.standard_scaler is not None:
-            self.standard_scaler.transform(X)
+            X = self.standard_scaler.transform(X)
 
         return predict(self.w, adjust(X))

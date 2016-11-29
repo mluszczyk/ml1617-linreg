@@ -1,12 +1,15 @@
 import numpy
+from sklearn.linear_model import LinearRegression
 
 from mylinearregression import MyLinearRegression
 
-estimator = MyLinearRegression(
+my_estimator = MyLinearRegression(
     n_epochs=1000, learning_rate=0.4,
-    decay=0.99, batch_size=10, shuffle=True,
-    holdout_size=0.1, standardize=True, l2=0.001
+    decay=1., batch_size=10, shuffle=True,
+    holdout_size=0., standardize=True, l2=0.001
 )
+
+sk_estimator = LinearRegression(normalize=True)
 
 xs = [0.528229010724395, 0.9027745539321911, 0.3118521458689988, 0.11704848570256954, 0.4766089600561566,
       0.8668141447194354, 0.769038647282098, 0.8098811544095684, 0.05375849568209068, 0.18397805336513817,
@@ -33,10 +36,19 @@ ys = [0.6660301081666091, 0.7880311929162538, 0.6209767354689372, 0.498394735361
 Xs = numpy.asarray(xs)
 Xs = Xs.reshape((len(xs), 1))
 Ys = numpy.asarray(ys)
-estimator.fit(Xs, ys)
-PYs = estimator.predict(Xs)
+my_estimator.fit(Xs, ys)
+my_PYs = my_estimator.predict(Xs)
+sk_estimator.fit(Xs, ys)
+sk_PYs = sk_estimator.predict(Xs)
 
-print(estimator.validation)
-
-print(Ys)
-print(PYs)
+from matplotlib import pyplot as plt
+plt.subplot(3, 1, 1)
+plt.hist(Ys)
+plt.xlim((0.3, 0.9))
+plt.subplot(3, 1, 2)
+plt.hist(my_PYs)
+plt.xlim((0.3, 0.9))
+plt.subplot(3, 1, 3)
+plt.hist(sk_PYs)
+plt.xlim((0.3, 0.9))
+plt.show()
