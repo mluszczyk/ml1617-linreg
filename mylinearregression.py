@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle
 from sklearn.utils.validation import check_X_y, check_array
 
-from linreg import predict, linreg, adjust
+from linreg import predict, linreg, adjust, rmse_partial_derivative
 
 
 class MyLinearRegression(BaseEstimator):
@@ -28,6 +28,8 @@ class MyLinearRegression(BaseEstimator):
         self.w = None
         self.validation = None
         self.standard_scaler = None
+
+        self.partial_derivative = rmse_partial_derivative
 
     def holdout(self, X, y):
         holdout_num = int(round(self.holdout_size * X.shape[0]))
@@ -58,8 +60,10 @@ class MyLinearRegression(BaseEstimator):
             self.standard_scaler = StandardScaler()
             X = self.standard_scaler.fit_transform(X)
         batch_size = X.shape[0] if self.batch_size is None else self.batch_size
-        self.w = linreg(adjust(X), y, batch_size, self.n_epochs, self.shuffle,
-                        self.l2, self.learning_rate, self.decay)
+        self.w = linreg(
+            self.partial_derivative,
+            adjust(X), y, batch_size, self.n_epochs, self.shuffle,
+            self.l2, self.learning_rate, self.decay)
         # Return the estimator
         return self
 
