@@ -30,6 +30,7 @@ class MyLinearRegression(BaseEstimator):
         self.standard_scaler = None
 
         self.partial_derivative = rmse_partial_derivative
+        self.predict_func = predict
 
     def holdout(self, X, y):
         holdout_num = int(round(self.holdout_size * X.shape[0]))
@@ -82,4 +83,4 @@ class MyLinearRegression(BaseEstimator):
         if self.standard_scaler is not None:
             X = self.standard_scaler.transform(X)
 
-        return predict(self.w, adjust(X))
+        return self.predict_func(self.w, adjust(X))

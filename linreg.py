@@ -7,6 +7,10 @@ def predict(w, x):
     return numpy.asarray([numpy.inner(w, xi) for xi in x])
 
 
+def predict_logistic(w, x):
+    return 1 / (1 + math.e ** - predict(w, x))
+
+
 def l2_loss(ys, ps):
     assert len(ys) == len(ps)
     return sum((y - p) ** 2 for y, p in zip(ys, ps)) / len(ys)
@@ -42,7 +46,7 @@ def adjust(x):
     return numpy.insert(x, 0, 1, axis=1)
 
 
-def linreg(partial, x, y, batch_size, n_epochs, shuffle_: bool, l2, learning_rate, decay):
+def linreg(partial_loss, x, y, batch_size, n_epochs, shuffle_: bool, l2, learning_rate, decay):
     start = numpy.zeros((x.shape[1],))
 
     w = start
@@ -55,7 +59,7 @@ def linreg(partial, x, y, batch_size, n_epochs, shuffle_: bool, l2, learning_rat
         )
 
         for bx, by in batch_iterator:
-            grad = gradient(partial, l2, w, bx, by)
+            grad = gradient(partial_loss, l2, w, bx, by)
             w += -learning_rate * grad
             learning_rate *= decay
     return w
