@@ -1,5 +1,10 @@
 import numpy as np
 
+from matplotlib import pyplot
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
 from mylogisticregression import MyLogisticRegression
 
 np.random.seed(123)
@@ -34,18 +39,20 @@ y = [lin_rule(x, sigma * np.random.normal()) for x in X]
 print(X[:10])
 print(y[:10])
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 
-clf = MyLogisticRegression()
-clf.fit(X, y)
+estimators = [
+    LogisticRegression(),
+    MyLogisticRegression()
+]
 
-y_pred = clf.predict(X)
+for estimator in estimators:
+    estimator.fit(X, y)
 
-from matplotlib import pyplot
-pyplot.hist(clf.y_)
-pyplot.draw()
+    y_pred = estimator.predict(X)
 
-print('Accuracy: {}'.format(accuracy_score(y, y_pred)))
+    print('Accuracy: {}'.format(accuracy_score(y, y_pred)))
+
+
+print(pyplot.hist(estimators[1].y_))
 
 pyplot.show()

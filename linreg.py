@@ -7,19 +7,19 @@ def predict(w, x):
     return numpy.asarray([numpy.inner(w, xi) for xi in x])
 
 
+def logistic(u):
+    return 1 / (1 + math.e ** -u)
+
+
 def predict_logistic(w, x):
-    return 1 / (1 + math.e ** -predict(w, x))
+    return logistic(predict(w, x))
 
 
 def l2_loss(ys: numpy.ndarray, ps: numpy.ndarray):
     return numpy.mean((ys - ps) ** 2)
 
 
-def rmse(w, x, y):
-    return l2_loss(y, predict(w, x))
-
-
-def rmse_partial_derivative(l2, y, w, x, i):
+def rmse_partial_derivative(l2, y, w, x, i) -> float:
     n = len(y)
     return (
         -2. / n * sum((yk - numpy.inner(w, xk)) * xk[i] for yk, xk in zip(y, x)) +
@@ -27,10 +27,11 @@ def rmse_partial_derivative(l2, y, w, x, i):
     )
 
 
-def partial_derivative_logistic(l2, y, w, x, i):
-    rmse_ = rmse(w, x, y)
-    rmse_partial_derivative_ = rmse_partial_derivative(l2, y, w, x, i)
-    return math.e ** rmse_ * rmse_partial_derivative_ / (1 + math.e ** rmse_)
+def partial_derivative_logistic(l2, y, w, x, i) -> float:
+    """Source: course materials, presentation for lesson 4, s 11."""
+    return (
+        sum((logistic(numpy.inner(w, xk)) - yk) * xk[i] for xk, yk in zip(x, y))
+    )
 
 
 def gradient(partial_derivative, l2, w, x, y):
@@ -44,7 +45,7 @@ def adjust(x):
     return numpy.insert(x, 0, 1, axis=1)
 
 
-def linreg(partial_loss, x, y, batch_size, n_epochs, shuffle_: bool, l2, learning_rate, decay):
+def linreg(loss_partial_derivative, x, y, batch_size, n_epochs, shuffle_: bool, l2, learning_rate, decay):
     start = numpy.zeros((x.shape[1],))
 
     w = start
@@ -57,7 +58,7 @@ def linreg(partial_loss, x, y, batch_size, n_epochs, shuffle_: bool, l2, learnin
         )
 
         for bx, by in batch_iterator:
-            grad = gradient(partial_loss, l2, w, bx, by)
+            grad = gradient(loss_partial_derivative, l2, w, bx, by)
             w += -learning_rate * grad
             learning_rate *= decay
     return w

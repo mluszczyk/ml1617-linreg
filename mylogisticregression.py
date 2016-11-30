@@ -9,10 +9,10 @@ from mylinearregression import MyLinearRegression
 class MyLogisticRegression(BaseEstimator):
     def __init__(self, *args, **kwargs):
         self.linear_regression = MyLinearRegression(*args, **kwargs)
-        # assert self.linear_regression.partial_derivative is not None
-        # self.linear_regression.partial_derivative = partial_derivative_logistic
-        # assert self.linear_regression.predict_func is not None
-        # self.linear_regression.predict_func = predict_logistic
+        assert self.linear_regression.partial_derivative is not None
+        self.linear_regression.partial_derivative = partial_derivative_logistic
+        assert self.linear_regression.predict_func is not None
+        self.linear_regression.predict_func = predict_logistic
 
     @staticmethod
     def bools_to_floats(y):
