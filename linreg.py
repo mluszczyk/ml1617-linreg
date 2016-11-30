@@ -30,7 +30,8 @@ def rmse_partial_derivative(l2, y, w, x, i) -> float:
 def partial_derivative_logistic(l2, y, w, x, i) -> float:
     """Source: course materials, presentation for lesson 4, s 11."""
     return (
-        sum((logistic(numpy.inner(w, xk)) - yk) * xk[i] for xk, yk in zip(x, y))
+        sum((logistic(numpy.inner(w, xk)) - yk) * xk[i] for xk, yk in zip(x, y)) +
+        2 * l2 * w[i]
     )
 
 
