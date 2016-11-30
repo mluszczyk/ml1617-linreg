@@ -44,6 +44,33 @@ class TestLogistic(TestCase):
         estimator.set_params(l2=0.04)
         self.assertEqual(estimator.l2, 0.04)
 
+    def test_example(self):
+        numpy.random.seed(2)
+
+        a = 0.3
+        b = -0.2
+        c = 0.001
+
+        def lin_rule(x, noise=0.):
+            return a * x[0] + b * x[1] + c + noise < 0.
+
+        n = 100
+        range_points = 1
+
+        sigma = 0.05
+
+        X = range_points * 2 * (numpy.random.rand(n, 2) - 0.5)
+        y = [lin_rule(x, sigma * numpy.random.normal()) for x in X]
+
+        estimator = MyLogisticRegression(learning_rate=0.05)
+        estimator.fit(X, y)
+        y_pred = estimator.predict(X)
+
+        accuracy = accuracy_score(y, y_pred)
+
+        print(accuracy)
+        self.assertGreaterEqual(accuracy, 0.9)
+
 
 class TestLinear(TestCase):
     def test_zero_epochs(self):
@@ -79,32 +106,3 @@ class TestLinear(TestCase):
 
         y_pred = estimator.predict(X)
         self.assertAlmostEqual(y_pred[0], 1., places=1)
-
-
-class LogisticRegressionTests(TestCase):
-    def test_example(self):
-        numpy.random.seed(2)
-
-        a = 0.3
-        b = -0.2
-        c = 0.001
-
-        def lin_rule(x, noise=0.):
-            return a * x[0] + b * x[1] + c + noise < 0.
-
-        n = 100
-        range_points = 1
-
-        sigma = 0.05
-
-        X = range_points * 2 * (numpy.random.rand(n, 2) - 0.5)
-        y = [lin_rule(x, sigma * numpy.random.normal()) for x in X]
-
-        estimator = MyLogisticRegression(learning_rate=0.05)
-        estimator.fit(X, y)
-        y_pred = estimator.predict(X)
-
-        accuracy = accuracy_score(y, y_pred)
-
-        print(accuracy)
-        self.assertGreaterEqual(accuracy, 0.9)
