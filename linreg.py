@@ -23,7 +23,7 @@ def rmse_partial_derivative(l2, y, w, x, i) -> float:
     n = len(y)
     return (
         -2. / n * sum((yk - numpy.inner(w, xk)) * xk[i] for yk, xk in zip(y, x)) +
-        l2 * numpy.sum(w)
+        2 * l2 * w[i]
     )
 
 
