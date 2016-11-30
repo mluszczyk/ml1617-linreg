@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy
 from numpy.random import seed
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal, assert_array_almost_equal
 from sklearn.metrics import accuracy_score
 
 from linreg import rmse_partial_derivative, logistic
@@ -110,3 +110,31 @@ class TestLinear(TestCase):
 
         y_pred = estimator.predict(X)
         self.assertAlmostEqual(y_pred[0], 1., places=1)
+
+    def test_standardization_is_used(self):
+        X = numpy.asarray([[2., 3.], [0., 1.], [2., 0.], [0., 0.]])
+        y = numpy.asarray([1., 5., 3., 1.])
+
+        estimator = MyLinearRegression(standardize=True)
+        estimator.fit(X, y)
+
+        scaler = estimator.standard_scaler
+        self.assertIsNotNone(scaler)
+
+        assert_array_equal(scaler.mean_, [1., 1.])
+
+        y_pred = estimator.predict(X)
+
+        estimator.standard_scaler = None
+        y_pred_unscaled = estimator.predict(X)
+        self.assertNotEqual(list(y_pred), list(y_pred_unscaled))
+
+    def test_standardize_y(self):
+        X = numpy.asarray([[1.63295], [-1.63295], [0.]])
+        y = numpy.asarray([2., -2., 0.])
+
+        estimator = MyLinearRegression(standardize=True)
+        estimator.fit(X, y)
+
+        assert_array_almost_equal(estimator.w, [0., 1.], decimal=3)
+        assert_array_almost_equal(estimator.predict(X), [2., -2., 0.], decimal=3)

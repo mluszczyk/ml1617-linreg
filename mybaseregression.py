@@ -54,6 +54,7 @@ class MyBaseRegression(BaseEstimator):
         if self.standardize:
             self.standard_scaler = StandardScaler()
             X = self.standard_scaler.fit_transform(X)
+        y = self.fit_transform_y(y)
         batch_size = X.shape[0] if self.batch_size is None else self.batch_size
         self.w = linreg(
             self.partial_derivative,
@@ -66,4 +67,10 @@ class MyBaseRegression(BaseEstimator):
         X = check_array(X)
         if self.standard_scaler is not None:
             X = self.standard_scaler.transform(X)
-        return predict_func(self.w, adjust(X))
+        return self.inverse_transform_y(predict_func(self.w, adjust(X)))
+
+    def fit_transform_y(self, y):
+        return y
+
+    def inverse_transform_y(self, y):
+        return y
