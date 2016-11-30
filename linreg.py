@@ -8,12 +8,11 @@ def predict(w, x):
 
 
 def predict_logistic(w, x):
-    return 1 / (1 + math.e ** - predict(w, x))
+    return 1 / (1 + math.e ** -predict(w, x))
 
 
-def l2_loss(ys, ps):
-    assert len(ys) == len(ps)
-    return sum((y - p) ** 2 for y, p in zip(ys, ps)) / len(ys)
+def l2_loss(ys: numpy.ndarray, ps: numpy.ndarray):
+    return numpy.mean((ys - ps) ** 2)
 
 
 def rmse(w, x, y):
@@ -23,7 +22,7 @@ def rmse(w, x, y):
 def rmse_partial_derivative(l2, y, w, x, i):
     n = len(y)
     return (
-        -2. / n * sum((y[k] - numpy.inner(w, x[k])) * x[k][i] for k, _ in enumerate(y)) +
+        -2. / n * sum((yk - numpy.inner(w, xk)) * xk[i] for yk, xk in zip(y, x)) +
         l2 * numpy.sum(w)
     )
 
@@ -35,8 +34,7 @@ def partial_derivative_logistic(l2, y, w, x, i):
 
 
 def gradient(partial_derivative, l2, w, x, y):
-    dim = len(w)
-    return numpy.asarray(tuple(partial_derivative(l2, y, w, x, i) for i in range(dim)))
+    return numpy.asarray(tuple(partial_derivative(l2, y, w, x, i) for i, _ in enumerate(w)))
 
 
 def adjust(x):
