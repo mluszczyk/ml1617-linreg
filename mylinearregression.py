@@ -10,8 +10,14 @@ class MyLinearRegression(MyBaseRegression):
         A parameter used for demonstation of how to pass and store paramters.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(rmse_partial_derivative, *args, **kwargs)
+    def __init__(self,
+                 batch_size=None, n_epochs=100, shuffle = False,
+                 holdout_size = 0., l2=0., learning_rate=.1, decay=1.0,
+                 standardize = False):
+        super().__init__(rmse_partial_derivative,
+                         batch_size, n_epochs, shuffle,
+                         holdout_size, l2, learning_rate, decay,
+                         standardize)
 
     def predict(self, X):
         """ A reference implementation of a predicting function.
