@@ -1,4 +1,4 @@
-"""test with two features"""
+"""Demonstration with two features. Displays a histogram."""
 
 import numpy as np
 

@@ -1,3 +1,7 @@
+"""Demonstrates logistic regression.
+Shows histograms of predict_proba from sklearn and predict_log from my regression.
+"""
+
 import numpy as np
 
 from matplotlib import pyplot
@@ -42,7 +46,7 @@ print(y[:10])
 
 estimators = [
     LogisticRegression(),
-    MyLogisticRegression(learning_rate=0.05)
+    MyLogisticRegression(learning_rate=0.05, l2=0.5)
 ]
 
 for estimator in estimators:
@@ -52,7 +56,10 @@ for estimator in estimators:
 
     print('Accuracy: {}'.format(accuracy_score(y, y_pred)))
 
-
-print(pyplot.hist(estimators[1].predict_log(X)))
+pyplot.subplot(2, 1, 1)
+print(estimators[0].predict_proba(X))
+pyplot.hist(estimators[0].predict_proba(X))
+pyplot.subplot(2, 1, 2)
+pyplot.hist(estimators[1].predict_log(X))
 
 pyplot.show()

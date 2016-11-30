@@ -1,3 +1,7 @@
+"""Demo of linear regression.
+Example taken from notebook from the first tutorial.
+"""
+
 import numpy
 from sklearn.linear_model import LinearRegression
 
