@@ -68,8 +68,12 @@ class TestLogistic(TestCase):
 
         accuracy = accuracy_score(y, y_pred)
 
-        print(accuracy)
         self.assertGreaterEqual(accuracy, 0.9)
+
+    def test_two_y(self):
+        estimator = MyLinearRegression()
+        with self.assertRaises(ValueError):
+            estimator.fit(numpy.asarray([[1]]), numpy.asarray([[1, 1]]))
 
 
 class TestLinear(TestCase):
