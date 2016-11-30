@@ -4,9 +4,9 @@ from mybaseregression import MyBaseRegression
 
 class MyLogisticRegression(MyBaseRegression):
     def __init__(self,
-                 batch_size=None, n_epochs=100, shuffle = False,
-                 holdout_size = 0., l2=0., learning_rate=.1, decay=1.0,
-                 standardize = False):
+                 batch_size=None, n_epochs=100, shuffle=False,
+                 holdout_size=0., l2=0., learning_rate=.1, decay=1.0,
+                 standardize=False):
         super().__init__(partial_derivative_logistic,
                          batch_size, n_epochs, shuffle,
                          holdout_size, l2, learning_rate, decay,
