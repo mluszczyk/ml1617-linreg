@@ -14,7 +14,7 @@ class MyLinearRegression(BaseEstimator):
         A parameter used for demonstation of how to pass and store paramters.
     """
     def __init__(self, batch_size=None, n_epochs=100, shuffle: bool=False,
-                 holdout_size: float=0., l2=0., learning_rate=1.0, decay=1.0,
+                 holdout_size: float=0., l2=0., learning_rate=.1, decay=1.0,
                  standardize: bool=False):
         self.batch_size = batch_size
         self.n_epochs = n_epochs

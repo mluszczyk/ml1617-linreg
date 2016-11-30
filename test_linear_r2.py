@@ -33,8 +33,6 @@ y = np.asfarray([lin_rule(x, sigma * np.random.normal()) for x in X])
 print(X[:10])
 print(y[:10])
 
-from sklearn.metrics import accuracy_score
-
 clf = MyLinearRegression()
 clf.fit(X, y)
 
