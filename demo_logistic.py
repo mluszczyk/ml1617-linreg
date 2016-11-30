@@ -26,7 +26,7 @@ def get_y_fun(a, b, c):
 
 lin_fun = get_y_fun(a, b, c)
 
-n = 1000
+n = 100
 range_points = 1
 range_plot = 1.1
 
@@ -42,7 +42,7 @@ print(y[:10])
 
 estimators = [
     LogisticRegression(),
-    MyLogisticRegression()
+    MyLogisticRegression(learning_rate=0.05)
 ]
 
 for estimator in estimators:

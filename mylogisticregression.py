@@ -12,10 +12,6 @@ class MyLogisticRegression(MyBaseRegression):
                          holdout_size, l2, learning_rate, decay,
                          standardize)
 
-    def fit(self, X, y):
-        super().fit(X, y)
-        return self
-
     def predict(self, X):
         return self.predict_wrapper(X, predict_logistic_bool)
 
