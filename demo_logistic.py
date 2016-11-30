@@ -53,6 +53,6 @@ for estimator in estimators:
     print('Accuracy: {}'.format(accuracy_score(y, y_pred)))
 
 
-print(pyplot.hist(estimators[1].y_))
+print(pyplot.hist(estimators[1].predict_log(X)))
 
 pyplot.show()

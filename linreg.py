@@ -15,6 +15,13 @@ def predict_logistic(w, x):
     return logistic(predict(w, x))
 
 
+def predict_logistic_bool(w, x):
+    """Equivalent to predict_logistics(w, x) > 0.5
+    Source: course materials, lesson 4, slide 6.
+    """
+    return predict(w, x) > 0.
+
+
 def l2_loss(ys: numpy.ndarray, ps: numpy.ndarray):
     return numpy.mean((ys - ps) ** 2)
 
