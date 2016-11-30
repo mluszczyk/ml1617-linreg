@@ -17,7 +17,7 @@ class TestRMSE(TestCase):
         w = numpy.asarray([0., 0., 0.])
 
         e = rmse_partial_derivative(0., y, w, x, 0)
-        self.assertAlmostEqual(e, -2, places=2)
+        self.assertAlmostEqual(e, -1, places=2)
 
 
 class TestLogistic(TestCase):
@@ -62,7 +62,7 @@ class TestLogistic(TestCase):
         X = range_points * 2 * (numpy.random.rand(n, 2) - 0.5)
         y = [lin_rule(x, sigma * numpy.random.normal()) for x in X]
 
-        estimator = MyLogisticRegression(learning_rate=0.05)
+        estimator = MyLogisticRegression()
         estimator.fit(X, y)
         y_pred = estimator.predict(X)
 
@@ -97,7 +97,7 @@ class TestLinear(TestCase):
         X = numpy.asarray([[2., 2.], [0., 2.], [2., 0.], [0., 0.]])
         y = numpy.asarray([1., -1., 3., 1.])
 
-        estimator = MyLinearRegression()
+        estimator = MyLinearRegression(learning_rate=0.2)
         estimator.fit(X, y)
 
         self.assertAlmostEqual(estimator.w[0], 1, places=1)
