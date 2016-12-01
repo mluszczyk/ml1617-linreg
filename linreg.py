@@ -1,4 +1,6 @@
 import math
+import statistics
+
 import numpy
 from sklearn.utils import shuffle
 
@@ -30,7 +32,7 @@ def rmse_partial_derivative(l2, y, w, x, i) -> float:
     """But there's no square and the constant of 2 is removed."""
     n = len(y)
     return (
-        -1. / n * sum((yk - numpy.inner(w, xk)) * xk[i] for yk, xk in zip(y, x)) +
+        -statistics.mean((yk - numpy.inner(w, xk)) * xk[i] for yk, xk in zip(y, x)) +
         ((2 * l2 * w[i]) if (i > 0) else 0)
     )
 

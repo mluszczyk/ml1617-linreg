@@ -4,6 +4,7 @@ Example taken from notebook from the first tutorial.
 
 import numpy
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 
 from mylinearregression import MyLinearRegression
 
@@ -45,6 +46,12 @@ my_PYs = my_estimator.predict(Xs)
 sk_estimator.fit(Xs, ys)
 sk_PYs = sk_estimator.predict(Xs)
 
+my_squared_error = mean_squared_error(Ys, my_PYs)
+print("my squared errors", my_squared_error)
+scikit_quared_error = mean_squared_error(Ys, sk_PYs)
+print("scikit squarred errors", scikit_quared_error)
+
+assert my_squared_error < 0.006
 
 from matplotlib import pyplot as plt
 plt.subplot(3, 1, 1)
