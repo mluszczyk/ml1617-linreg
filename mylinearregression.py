@@ -2,6 +2,7 @@ import numpy
 from sklearn.preprocessing import StandardScaler
 
 from mybaseregression import MyBaseRegression
+from noopscaler import NoOpScaler
 
 
 class MyLinearRegression(MyBaseRegression):
@@ -31,19 +32,12 @@ class MyLinearRegression(MyBaseRegression):
         """
         return self.predict_wrapper(X, lambda w, x: x @ w)
 
-    def fit_transform_y(self, y):
-        if self.standardize:
-            self.standard_scaler_y = StandardScaler()
-            return self.standard_scaler_y.fit_transform(y.reshape(-1, 1)).reshape(-1)
+    @staticmethod
+    def get_scaler_y(standardize: bool):
+        if standardize:
+            return StandardScaler()
         else:
-            self.standard_scaler_y = None
-            return y
-
-    def inverse_transform_y(self, y):
-        if self.standard_scaler_y is None:
-            return y
-        else:
-            return self.standard_scaler_y.inverse_transform(y.reshape(-1, 1)).reshape(-1)
+            return NoOpScaler()
 
 
 def rmse_gradient(w, x, y):

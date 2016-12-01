@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 
 from mylinearregression import MyLinearRegression, rmse_gradient
 from mylogisticregression import MyLogisticRegression
+from noopscaler import NoOpScaler
 
 
 class TestRMSE(TestCase):
@@ -124,14 +125,11 @@ class TestLinear(TestCase):
         estimator = MyLinearRegression(standardize=True)
         estimator.fit(X, y)
 
-        scaler = estimator.standard_scaler
-        self.assertIsNotNone(scaler)
-
-        assert_array_equal(scaler.mean_, [1., 1.])
+        assert_array_equal(estimator.standard_scaler_x.mean_, [1., 1.])
 
         y_pred = estimator.predict(X)
 
-        estimator.standard_scaler = None
+        estimator.standard_scaler_x.mean_ = [23., 23.]
         y_pred_unscaled = estimator.predict(X)
         self.assertNotEqual(list(y_pred), list(y_pred_unscaled))
 
@@ -144,3 +142,11 @@ class TestLinear(TestCase):
 
         assert_array_almost_equal(estimator.w, [0., 1.], decimal=3)
         assert_array_almost_equal(estimator.predict(X), [2., -2., 0.], decimal=3)
+
+
+class TestNoOpScalerTest(TestCase):
+    def test(self):
+        estimator = NoOpScaler()
+        self.assertEqual(estimator.fit_transform("blah"), "blah")
+        self.assertEqual(estimator.transform("blah"), "blah")
+        self.assertEqual(estimator.inverse_transform("blah"), "blah")

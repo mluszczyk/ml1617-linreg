@@ -3,6 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle, check_X_y, check_array
 
 from gradientdescent import gradient_descent, adjust
+from noopscaler import NoOpScaler
 
 
 class MyBaseRegression(BaseEstimator):
@@ -19,11 +20,24 @@ class MyBaseRegression(BaseEstimator):
         self.decay = decay
         self.standardize = standardize
 
+        self.standard_scaler_x = self.get_scaler_x(self.standardize)
+        self.standard_scaler_y = self.get_scaler_y(self.standardize)
+
         self.w = None
         self.validation = None
-        self.standard_scaler = None
 
         self.loss_gradient = loss_gradient
+
+    @staticmethod
+    def get_scaler_x(standardize: bool):
+        if standardize:
+            return StandardScaler()
+        else:
+            return NoOpScaler()
+
+    @staticmethod
+    def get_scaler_y(standardize: bool):
+        return NoOpScaler()
 
     def holdout(self, X, y):
         holdout_num = int(round(self.holdout_size * X.shape[0]))
@@ -50,10 +64,8 @@ class MyBaseRegression(BaseEstimator):
         """
         X, y = check_X_y(X, y)
         X, y = self.holdout(X, y)
-        if self.standardize:
-            self.standard_scaler = StandardScaler()
-            X = self.standard_scaler.fit_transform(X)
-        y = self.fit_transform_y(y)
+        X = self.standard_scaler_x.fit_transform(X)
+        y = self.standard_scaler_y.fit_transform(y.reshape(-1, 1)).reshape(-1)
         batch_size = X.shape[0] if self.batch_size is None else self.batch_size
         self.w = gradient_descent(
             self.loss_gradient,
@@ -64,9 +76,9 @@ class MyBaseRegression(BaseEstimator):
 
     def predict_wrapper(self, X, predict_func):
         X = check_array(X)
-        if self.standard_scaler is not None:
-            X = self.standard_scaler.transform(X)
-        return self.inverse_transform_y(predict_func(self.w, adjust(X)))
+        X = self.standard_scaler_x.transform(X)
+        predicted = predict_func(self.w, adjust(X))
+        return self.standard_scaler_y.inverse_transform(predicted.reshape(-1, 1)).reshape(-1)
 
     def fit_transform_y(self, y):
         return y
