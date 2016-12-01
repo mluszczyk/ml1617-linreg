@@ -18,6 +18,6 @@ class MyLogisticRegression(MyBaseRegression):
         return self.predict_wrapper(X, predict_logistic_bool)
 
     def predict_proba(self, X):
-        col1 = self.predict_wrapper(X, predict_logistic).reshape(-1, 1)
-        col2 = 1. - col1
+        col2 = self.predict_wrapper(X, predict_logistic).reshape(-1, 1)
+        col1 = 1. - col2
         return concatenate((col1, col2), axis=1)
