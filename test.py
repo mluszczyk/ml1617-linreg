@@ -6,8 +6,7 @@ from numpy.testing import assert_array_equal, assert_array_almost_equal
 from scipy.special._ufuncs import expit
 from sklearn.metrics import accuracy_score
 
-from linreg import rmse_gradient
-from mylinearregression import MyLinearRegression
+from mylinearregression import MyLinearRegression, rmse_gradient
 from mylogisticregression import MyLogisticRegression
 
 

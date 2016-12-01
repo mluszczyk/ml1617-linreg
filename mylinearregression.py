@@ -1,7 +1,7 @@
+import numpy
 from sklearn.preprocessing import StandardScaler
 
 from mybaseregression import MyBaseRegression
-from linreg import predict, rmse_gradient
 
 
 class MyLinearRegression(MyBaseRegression):
@@ -29,7 +29,7 @@ class MyLinearRegression(MyBaseRegression):
         y : array of shape = [n_samples]
             Returns :math:`x^2` where :math:`x` is the first column of `X`.
         """
-        return self.predict_wrapper(X, predict)
+        return self.predict_wrapper(X, lambda w, x: x @ w)
 
     def fit_transform_y(self, y):
         if self.standardize:
@@ -44,3 +44,9 @@ class MyLinearRegression(MyBaseRegression):
             return y
         else:
             return self.standard_scaler_y.inverse_transform(y.reshape(-1, 1)).reshape(-1)
+
+
+def rmse_gradient(w, x, y):
+    return -numpy.mean([
+        (yk - numpy.inner(w, xk)) * xk for yk, xk in zip(y, x)
+    ], axis=0)

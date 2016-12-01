@@ -1,39 +1,13 @@
+"""Gradient descent implementation."""
+
 import numpy
-from scipy.special import expit
 from sklearn.utils import shuffle
-
-
-def predict(w, x):
-    return numpy.asarray([numpy.inner(w, xi) for xi in x])
-
-
-def predict_logistic(w, x):
-    return expit(predict(w, x))
-
-
-def predict_logistic_bool(w, x):
-    """Equivalent to predict_logistics(w, x) > 0.5
-    Source: course materials, lesson 4, slide 6.
-    """
-    return predict(w, x) > 0.
 
 
 def l2_regularization_gradient(l2, w):
     g = w.copy()
     g[0] = 0.  # don't penalize intercept
     return 2 * g * l2
-
-
-def rmse_gradient(w, x, y):
-    return -numpy.mean([
-        (yk - numpy.inner(w, xk)) * xk for yk, xk in zip(y, x)
-    ], axis=0)
-
-
-def logistic_gradient(w, x, y):
-    return numpy.mean([
-        (expit(numpy.inner(w, xk)) - yk) * xk for xk, yk in zip(x, y)
-    ], axis=0)
 
 
 def adjust(x):
@@ -46,6 +20,7 @@ def adjust(x):
 def gradient_descent(loss_gradient,
                      x, y, batch_size, n_epochs, shuffle_: bool,
                      l2, learning_rate, decay):
+    """Vectors in X are expected to have 1 as the first element."""
     start = numpy.zeros((x.shape[1],))
 
     w = start

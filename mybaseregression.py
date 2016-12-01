@@ -2,7 +2,7 @@ from sklearn.base import BaseEstimator
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle, check_X_y, check_array
 
-from linreg import predict, gradient_descent, adjust
+from gradientdescent import gradient_descent, adjust
 
 
 class MyBaseRegression(BaseEstimator):
@@ -24,7 +24,6 @@ class MyBaseRegression(BaseEstimator):
         self.standard_scaler = None
 
         self.loss_gradient = loss_gradient
-        self.predict_func = predict
 
     def holdout(self, X, y):
         holdout_num = int(round(self.holdout_size * X.shape[0]))

@@ -1,6 +1,8 @@
+import numpy
 from numpy import concatenate
+from scipy.special import expit
+from scipy.special._ufuncs import expit
 
-from linreg import predict_logistic, predict_logistic_bool, logistic_gradient
 from mybaseregression import MyBaseRegression
 
 
@@ -15,9 +17,16 @@ class MyLogisticRegression(MyBaseRegression):
                          standardize)
 
     def predict(self, X):
-        return self.predict_wrapper(X, predict_logistic_bool)
+        return self.predict_wrapper(X, lambda w, x: x @ w > 0.)
 
     def predict_proba(self, X):
-        col2 = self.predict_wrapper(X, predict_logistic).reshape(-1, 1)
+        pred = self.predict_wrapper(X, lambda w, x: expit(x @ w))
+        col2 = pred.reshape(-1, 1)
         col1 = 1. - col2
         return concatenate((col1, col2), axis=1)
+
+
+def logistic_gradient(w, x, y):
+    return numpy.mean([
+        (expit(numpy.inner(w, xk)) - yk) * xk for xk, yk in zip(x, y)
+    ], axis=0)
