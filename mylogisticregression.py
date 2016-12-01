@@ -1,7 +1,6 @@
 import numpy
 from numpy import concatenate
 from scipy.special import expit
-from scipy.special._ufuncs import expit
 
 from mybaseregression import MyBaseRegression
 
