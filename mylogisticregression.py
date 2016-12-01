@@ -1,3 +1,5 @@
+from numpy import concatenate
+
 from linreg import partial_derivative_logistic, predict_logistic, predict_logistic_bool
 from mybaseregression import MyBaseRegression
 
@@ -15,5 +17,7 @@ class MyLogisticRegression(MyBaseRegression):
     def predict(self, X):
         return self.predict_wrapper(X, predict_logistic_bool)
 
-    def predict_log(self, X):
-        return self.predict_wrapper(X, predict_logistic)
+    def predict_proba(self, X):
+        col1 = self.predict_wrapper(X, predict_logistic).reshape(-1, 1)
+        col2 = 1. - col1
+        return concatenate((col1, col2), axis=1)

@@ -70,6 +70,12 @@ class TestLogistic(TestCase):
 
         self.assertGreaterEqual(accuracy, 0.9)
 
+        proba_pred = estimator.predict_proba(X)[:, 0]
+        assert_array_equal(numpy.round_(proba_pred), y_pred)
+
+        proba_pred = 1 - estimator.predict_proba(X)[:, 1]
+        assert_array_equal(numpy.round_(proba_pred), y_pred)
+
     def test_two_y(self):
         estimator = MyLinearRegression()
         with self.assertRaises(ValueError):

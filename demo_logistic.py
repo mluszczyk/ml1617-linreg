@@ -57,9 +57,8 @@ for estimator in estimators:
     print('Accuracy: {}'.format(accuracy_score(y, y_pred)))
 
 pyplot.subplot(2, 1, 1)
-print(estimators[0].predict_proba(X))
 pyplot.hist(estimators[0].predict_proba(X))
 pyplot.subplot(2, 1, 2)
-pyplot.hist(estimators[1].predict_log(X))
+pyplot.hist(estimators[1].predict_proba(X))
 
 pyplot.show()
