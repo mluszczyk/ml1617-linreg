@@ -1,1 +1,1 @@
-Please use Python 3.
+Please use Python 3.5.
