@@ -3,9 +3,10 @@ from unittest import TestCase
 import numpy
 from numpy.random import seed
 from numpy.testing import assert_array_equal, assert_array_almost_equal
+from scipy.special._ufuncs import expit
 from sklearn.metrics import accuracy_score
 
-from linreg import rmse_partial_derivative, logistic
+from linreg import rmse_gradient
 from mylinearregression import MyLinearRegression
 from mylogisticregression import MyLogisticRegression
 
@@ -16,16 +17,16 @@ class TestRMSE(TestCase):
         y = numpy.asarray([1., -1., 3., 1.])
         w = numpy.asarray([0., 0., 0.])
 
-        e = rmse_partial_derivative(0., y, w, x, 0)
+        e = rmse_gradient(w, x, y)[0]
         self.assertAlmostEqual(e, -1, places=2)
 
 
-class TestLogistic(TestCase):
+class TestLogisticRegression(TestCase):
     def test_zero(self):
-        self.assertAlmostEqual(logistic(0.), 0.5, places=5)
+        self.assertAlmostEqual(expit(0.), 0.5, places=5)
 
     def test_minus_inf(self):
-        self.assertAlmostEqual(logistic(-100), 0., places=5)
+        self.assertAlmostEqual(expit(-100), 0., places=5)
 
     def test_get_params(self):
         estimator = MyLogisticRegression(l2=0.003)

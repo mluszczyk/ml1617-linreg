@@ -1,6 +1,6 @@
 from numpy import concatenate
 
-from linreg import partial_derivative_logistic, predict_logistic, predict_logistic_bool
+from linreg import predict_logistic, predict_logistic_bool, logistic_gradient
 from mybaseregression import MyBaseRegression
 
 
@@ -9,7 +9,7 @@ class MyLogisticRegression(MyBaseRegression):
                  batch_size=None, n_epochs=100, shuffle=False,
                  holdout_size=0., l2=0., learning_rate=.1, decay=1.0,
                  standardize=False):
-        super().__init__(partial_derivative_logistic,
+        super().__init__(logistic_gradient,
                          batch_size, n_epochs, shuffle,
                          holdout_size, l2, learning_rate, decay,
                          standardize)

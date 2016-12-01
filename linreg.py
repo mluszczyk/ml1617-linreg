@@ -1,7 +1,5 @@
-import math
-import statistics
-
 import numpy
+from scipy.special import expit
 from sklearn.utils import shuffle
 
 
@@ -9,12 +7,8 @@ def predict(w, x):
     return numpy.asarray([numpy.inner(w, xi) for xi in x])
 
 
-def logistic(u):
-    return 1 / (1 + math.e ** -u)
-
-
 def predict_logistic(w, x):
-    return logistic(predict(w, x))
+    return expit(predict(w, x))
 
 
 def predict_logistic_bool(w, x):
@@ -24,30 +18,22 @@ def predict_logistic_bool(w, x):
     return predict(w, x) > 0.
 
 
-def l2_loss(ys: numpy.ndarray, ps: numpy.ndarray):
-    return numpy.mean((ys - ps) ** 2)
+def l2_regularization_gradient(l2, w):
+    g = w.copy()
+    g[0] = 0.  # don't penalize intercept
+    return 2 * g * l2
 
 
-def rmse_partial_derivative(l2, y, w, x, i) -> float:
-    """But there's no square and the constant of 2 is removed."""
-    return (
-        -statistics.mean((yk - numpy.inner(w, xk)) * xk[i] for yk, xk in zip(y, x)) +
-        ((2 * l2 * w[i]) if (i > 0) else 0)
-    )
+def rmse_gradient(w, x, y):
+    return -numpy.mean([
+        (yk - numpy.inner(w, xk)) * xk for yk, xk in zip(y, x)
+    ], axis=0)
 
 
-def partial_derivative_logistic(l2, y, w, x, i) -> float:
-    """Source: course materials, presentation for lesson 4, s 11.
-    But it has mean rather than sum.
-    """
-    return (
-        statistics.mean((logistic(numpy.inner(w, xk)) - yk) * xk[i] for xk, yk in zip(x, y)) +
-        ((2 * l2 * w[i]) if (i > 0) else 0)
-    )
-
-
-def gradient(partial_derivative, l2, w, x, y):
-    return numpy.asarray(tuple(partial_derivative(l2, y, w, x, i) for i, _ in enumerate(w)))
+def logistic_gradient(w, x, y):
+    return numpy.mean([
+        (expit(numpy.inner(w, xk)) - yk) * xk for xk, yk in zip(x, y)
+    ], axis=0)
 
 
 def adjust(x):
@@ -57,7 +43,9 @@ def adjust(x):
     return numpy.insert(x, 0, 1, axis=1)
 
 
-def linreg(loss_partial_derivative, x, y, batch_size, n_epochs, shuffle_: bool, l2, learning_rate, decay):
+def gradient_descent(loss_gradient,
+                     x, y, batch_size, n_epochs, shuffle_: bool,
+                     l2, learning_rate, decay):
     start = numpy.zeros((x.shape[1],))
 
     w = start
@@ -70,7 +58,7 @@ def linreg(loss_partial_derivative, x, y, batch_size, n_epochs, shuffle_: bool, 
         )
 
         for bx, by in batch_iterator:
-            grad = gradient(loss_partial_derivative, l2, w, bx, by)
+            grad = loss_gradient(w, bx, by) + l2_regularization_gradient(l2, w)
             w += -learning_rate * grad
             learning_rate *= decay
     return w

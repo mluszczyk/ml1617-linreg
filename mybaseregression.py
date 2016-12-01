@@ -2,11 +2,11 @@ from sklearn.base import BaseEstimator
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle, check_X_y, check_array
 
-from linreg import predict, linreg, adjust
+from linreg import predict, gradient_descent, adjust
 
 
 class MyBaseRegression(BaseEstimator):
-    def __init__(self, loss_partial_derivative,
+    def __init__(self, loss_gradient,
                  batch_size=None, n_epochs=100, shuffle: bool=False,
                  holdout_size: float=0., l2=0., learning_rate=.1, decay=1.0,
                  standardize: bool=False):
@@ -23,7 +23,7 @@ class MyBaseRegression(BaseEstimator):
         self.validation = None
         self.standard_scaler = None
 
-        self.partial_derivative = loss_partial_derivative
+        self.loss_gradient = loss_gradient
         self.predict_func = predict
 
     def holdout(self, X, y):
@@ -56,8 +56,8 @@ class MyBaseRegression(BaseEstimator):
             X = self.standard_scaler.fit_transform(X)
         y = self.fit_transform_y(y)
         batch_size = X.shape[0] if self.batch_size is None else self.batch_size
-        self.w = linreg(
-            self.partial_derivative,
+        self.w = gradient_descent(
+            self.loss_gradient,
             adjust(X), y, batch_size, self.n_epochs, self.shuffle,
             self.l2, self.learning_rate, self.decay)
         # Return the estimator

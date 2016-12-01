@@ -1,7 +1,7 @@
 from sklearn.preprocessing import StandardScaler
 
 from mybaseregression import MyBaseRegression
-from linreg import rmse_partial_derivative, predict
+from linreg import predict, rmse_gradient
 
 
 class MyLinearRegression(MyBaseRegression):
@@ -9,7 +9,7 @@ class MyLinearRegression(MyBaseRegression):
                  batch_size=None, n_epochs=100, shuffle=False,
                  holdout_size=0., l2=0., learning_rate=.1, decay=1.0,
                  standardize=False):
-        super().__init__(rmse_partial_derivative,
+        super().__init__(rmse_gradient,
                          batch_size, n_epochs, shuffle,
                          holdout_size, l2, learning_rate, decay,
                          standardize)
